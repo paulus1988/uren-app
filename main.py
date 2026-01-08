@@ -181,6 +181,29 @@ def factuur(
         }
     )
 
+from passlib.context import CryptContext
+from models import User
+from database import SessionLocal
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+@app.get("/create_admin")
+def create_admin():
+    db = SessionLocal()
+
+    existing = db.query(User).filter(User.username == "admin").first()
+    if existing:
+        return {"status": "admin bestaat al"}
+
+    user = User(
+        username="admin",
+        password_hash=pwd_context.hash("admin123")
+    )
+    db.add(user)
+    db.commit()
+    db.close()
+
+    return {"status": "admin aangemaakt"}
 
 
 
