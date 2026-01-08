@@ -1,0 +1,21 @@
+<h2>Factuur maken</h2>
+
+<form method="get" action="/factuur_resultaat">
+  <label>Werknemer:</label><br>
+  <select name="werknemer_id">
+    {% for w in werknemers %}
+      <option value="{{ w.id }}">{{ w.naam }}</option>
+    {% endfor %}
+  </select><br><br>
+
+  <label>Periode:</label><br>
+  <select name="periode">
+    {% for p in periodes %}
+      <option value="{{ p }}">{{ p }}</option>
+    {% endfor %}
+  </select><br><br>
+
+  <button>Genereer factuur</button>
+</form>
+
+<a href="/">Terug</a>

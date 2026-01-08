@@ -1,0 +1,23 @@
+<h2>Factuur</h2>
+
+<p>
+<strong>Werknemer:</strong> {{ werknemer.naam }}<br>
+<strong>Adres:</strong> {{ werknemer.adres }}<br>
+<strong>Periode:</strong> {{ periode }}
+</p>
+
+<table border="1" cellpadding="5">
+<tr>
+  <th>Totaal uren</th>
+  <th>Uurtarief</th>
+  <th>Bedrag</th>
+</tr>
+<tr>
+  <td>{{ totaal_uren }}</td>
+  <td>€ {{ uurtarief }}</td>
+  <td><strong>€ {{ bedrag }}</strong></td>
+</tr>
+</table>
+
+<br>
+<a href="/">Terug</a>
