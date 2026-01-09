@@ -186,33 +186,6 @@ def factuur(
         }
     )
 
-@app.get("/create_admin", response_class=PlainTextResponse)
-def create_admin():
-    try:
-        db = SessionLocal()
-
-        existing = db.query(User).filter(User.username == "admin").first()
-        if existing:
-            return "admin bestaat al"
-
-        user = User(
-            username="admin",
-            password_hash="test"
-        )
-        db.add(user)
-        db.commit()
-
-        return "admin aangemaakt"
-
-    except Exception:
-        return traceback.format_exc()
-
-    finally:
-        db.close()
-
-
-
-
 
 
 
