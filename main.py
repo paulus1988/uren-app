@@ -12,6 +12,9 @@ from itsdangerous import URLSafeSerializer
 from models import User
 import hashlib
 
+import traceback
+from fastapi.responses import PlainTextResponse
+
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 
@@ -183,25 +186,26 @@ def factuur(
         }
     )
 
-@app.get("/create_admin")
+@app.get("/create_admin", response_class=PlainTextResponse)
 def create_admin():
-    db = SessionLocal()
-
     try:
+        db = SessionLocal()
+
         existing = db.query(User).filter(User.username == "admin").first()
         if existing:
-            return {"status": "admin bestaat al"}
-
-        password_hash = hashlib.sha256("admin123".encode()).hexdigest()
+            return "admin bestaat al"
 
         user = User(
             username="admin",
-            password_hash=password_hash
+            password_hash="test"
         )
         db.add(user)
         db.commit()
 
-        return {"status": "admin aangemaakt"}
+        return "admin aangemaakt"
+
+    except Exception:
+        return traceback.format_exc()
 
     finally:
         db.close()
