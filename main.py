@@ -227,3 +227,16 @@ def factuur(
             "bedrag": bedrag
         }
     )
+
+@app.get("/reset_admin")
+def reset_admin():
+    db = SessionLocal()
+    new_hash = hashlib.sha256("test123".encode()).hexdigest()
+    db.query(User).filter(User.username == "admin").update(
+        {"password_hash": new_hash}
+    )
+    db.commit()
+    db.close()
+    return "admin wachtwoord is nu: nieuw123"
+
+
