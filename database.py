@@ -13,3 +13,6 @@ SessionLocal = sessionmaker(
 )
 
 Base = declarative_base()
+
+# 🔴 TIJDELIJK: tabellen automatisch aanmaken
+Base.metadata.create_all(bind=engine)
