@@ -13,6 +13,7 @@ import hashlib
 
 from database import SessionLocal
 from models import User, Werknemer, Uur
+from fastapi import HTTPException, status
 
 # -------------------------------------------------
 # App setup
@@ -38,7 +39,10 @@ def get_db():
 
 def require_login(session_user: str | None = Cookie(default=None)):
     if not session_user:
-        return RedirectResponse("/login", status_code=302)
+        raise HTTPException(
+            status_code=status.HTTP_303_SEE_OTHER,
+            headers={"Location": "/login"}
+        )
     return session_user
 
 # -------------------------------------------------
