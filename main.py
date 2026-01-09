@@ -10,7 +10,7 @@ from passlib.context import CryptContext
 from fastapi import Response
 from itsdangerous import URLSafeSerializer
 from models import User
-from passlib.context import CryptContext
+import hashlib
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -22,7 +22,7 @@ def get_db():
     finally:
         db.close()
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
 
 
 SECRET_KEY = "verander-dit-later-naar-iets-geheims"
@@ -45,7 +45,7 @@ def login(
 ):
     user = db.query(User).filter(User.username == username).first()
 
-    if not user or not pwd_context.verify(password, user.password_hash):
+    if not user or not hashlib.sha256(password.encode()).hexdigest() == user.password_hash:
         return templates.TemplateResponse(
             "login.html",
             {"request": request, "error": "Ongeldige login"}
@@ -192,9 +192,11 @@ def create_admin():
         if existing:
             return {"status": "admin bestaat al"}
 
+        password_hash = hashlib.sha256("admin123".encode()).hexdigest()
+
         user = User(
             username="admin",
-            password_hash=pwd_context.hash("admin123")
+            password_hash=password_hash
         )
         db.add(user)
         db.commit()
@@ -203,6 +205,7 @@ def create_admin():
 
     finally:
         db.close()
+
 
 
 
