@@ -14,5 +14,7 @@ SessionLocal = sessionmaker(
 
 Base = declarative_base()
 
-# 🔴 TIJDELIJK: tabellen automatisch aanmaken
+# ⬇⬇⬇ DIT IS DE SLEUTEL ⬇⬇⬇
+import models  # forceer laden van alle modellen
+
 Base.metadata.create_all(bind=engine)
