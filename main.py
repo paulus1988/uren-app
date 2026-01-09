@@ -10,6 +10,7 @@ from passlib.context import CryptContext
 from fastapi import Response
 from itsdangerous import URLSafeSerializer
 from models import User
+from passlib.context import CryptContext
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -22,6 +23,7 @@ def get_db():
         db.close()
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
 
 SECRET_KEY = "verander-dit-later-naar-iets-geheims"
 serializer = URLSafeSerializer(SECRET_KEY)
@@ -181,29 +183,26 @@ def factuur(
         }
     )
 
-from passlib.context import CryptContext
-from models import User
-from database import SessionLocal
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
 @app.get("/create_admin")
 def create_admin():
     db = SessionLocal()
 
-    existing = db.query(User).filter(User.username == "admin").first()
-    if existing:
-        return {"status": "admin bestaat al"}
+    try:
+        existing = db.query(User).filter(User.username == "admin").first()
+        if existing:
+            return {"status": "admin bestaat al"}
 
-    user = User(
-        username="admin",
-        password_hash=pwd_context.hash("admin123")
-    )
-    db.add(user)
-    db.commit()
-    db.close()
+        user = User(
+            username="admin",
+            password_hash=pwd_context.hash("admin123")
+        )
+        db.add(user)
+        db.commit()
 
-    return {"status": "admin aangemaakt"}
+        return {"status": "admin aangemaakt"}
+
+    finally:
+        db.close()
 
 
 
